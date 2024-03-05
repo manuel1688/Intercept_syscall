@@ -16,6 +16,7 @@ hook(long syscall_number,
 	(void) arg4;
 	(void) arg5;
 
+	// write(fd, text, strlen(text));
 	if (syscall_number == SYS_write) {
 		char buf_copy[0x1000];
 		size_t size = (size_t)arg2;
@@ -51,7 +52,7 @@ hook(long syscall_number,
 			}
 
 			iov[i].iov_base = buf_copy;
-		}
+		} 
 
 		*result = syscall_no_intercept(SYS_writev, arg0, iov, iovcnt);
 		return 0;
