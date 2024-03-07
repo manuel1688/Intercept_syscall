@@ -20,7 +20,7 @@ hook(long syscall_number,
 	// fd1 = creat(argv[1], 00777);
 	// /tmp/expand/P1/demo.txt  1
 	// cuando llama la localidad, el path cambia por lo tanto entraria en syscall_no_intercept
-	if (syscall_number == SYS_create) {
+	if (syscall_number == SYS_creat) {
 		/*
 		creat recibe 2 argumentos, el primer argumento es el path y el segundo es el modo
 		los valores de modo puede ser: 00777, 00700, 00666, 00600
