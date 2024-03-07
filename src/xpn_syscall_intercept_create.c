@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/uio.h>
 
+
 static int
 hook(long syscall_number,
 			long arg0, long arg1,
@@ -49,7 +50,7 @@ hook(long syscall_number,
 			// debug_info("[bypass]\t try to dlsym_creat %s\n", path);
 			// ret = dlsym_creat(path, mode);
 			// debug_info("[bypass]\t dlsym_creat %s -> %d\n", path, ret);
-			*result = syscall_no_intercept(SYS_create, arg0, arg1);
+			*result = syscall_no_intercept(SYS_creat, arg0, arg1);
 			return 0;
 		}
 
