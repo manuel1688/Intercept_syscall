@@ -8,6 +8,18 @@
 char *xpn_adaptor_partition_prefix = "/tmp/expand/"; // Original --> xpn:// 
 int   xpn_prefix_change_verified = 0;
 
+static int xpn_adaptor_initCalled = 0;
+static int xpn_adaptor_initCalled_getenv = 0; 
+
+struct generic_fd
+  {
+    int type;
+    int real_fd;
+    int is_file;
+  };
+
+#define FD_XPN  2
+
 static int
 hook(long syscall_number,
 			long arg0, long arg1,
