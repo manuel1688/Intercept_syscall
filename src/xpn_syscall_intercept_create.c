@@ -67,3 +67,115 @@ init(void)
 	// Set up the callback function
 	intercept_hook_point = hook;
 }
+
+int is_xpn_prefix   ( const char * path ) // valida si el path contiene el prefijo de XPN 
+{
+  if (0 == xpn_prefix_change_verified)
+  {
+    xpn_prefix_change_verified = 1;
+
+    char * env_prefix = getenv("XPN_MOUNT_POINT");
+    if (env_prefix != NULL)
+    {
+      xpn_adaptor_partition_prefix = env_prefix;
+    }
+  }
+  
+  const char *prefix = (const char *)xpn_adaptor_partition_prefix;
+
+  return ( !strncmp(prefix, path, strlen(prefix)) && strlen(path) > strlen(prefix) );
+}
+
+int xpn_adaptor_keepInit ( void )
+{
+  int    ret;
+  char * xpn_adaptor_initCalled_env = NULL;
+  
+  debug_info("[bypass] >> Before xpn_adaptor_keepInit....\n");
+
+  if (0 == xpn_adaptor_initCalled_getenv)
+  {
+    xpn_adaptor_initCalled_env = getenv("INITCALLED");
+    xpn_adaptor_initCalled     = 0;
+
+    if (xpn_adaptor_initCalled_env != NULL) {
+      xpn_adaptor_initCalled = atoi(xpn_adaptor_initCalled_env);
+    }
+
+    xpn_adaptor_initCalled_getenv = 1;
+  }
+  
+  ret = 0;
+
+  // If expand has not been initialized, then initialize it.
+  if (0 == xpn_adaptor_initCalled)
+  {
+    xpn_adaptor_initCalled = 1; //TODO: Delete
+    setenv("INITCALLED", "1", 1);
+
+    debug_info("[bypass]\t Before xpn_init()\n");
+
+    fdstable_init ();
+    fdsdirtable_init ();
+    ret = xpn_init();
+
+    debug_info("[bypass]\t After xpn_init() -> %d\n", ret);
+
+    if (ret < 0)
+    {
+      debug_error( "ERROR: Expand xpn_init couldn't be initialized :-(\n");
+      xpn_adaptor_initCalled = 0;
+      setenv("INITCALLED", "0", 1);
+    }
+    else
+    {
+      xpn_adaptor_initCalled = 1;
+      setenv("INITCALLED", "1", 1);
+    }
+  }
+
+  debug_info("[bypass]\t xpn_adaptor_keepInit -> %d\n", ret);
+  debug_info("[bypass] << After xpn_adaptor_keepInit....\n");
+
+  return ret;
+}
+
+const char * skip_xpn_prefix ( const char * path ) // esta funcion se encarga de saltar el prefijo de XPN con el fin de obtener el path real para el sistema de archivos que se esta utilizando
+{
+  return (const char *)(path + strlen(xpn_adaptor_partition_prefix));
+}
+
+int add_xpn_file_to_fdstable ( int fd ) // esta funcion se encarga de añadir un descriptor de fichero correspondiente a un fichero de XPN en la tabla de descriptores de ficheros
+{
+  struct stat st; // estructura que almacena la informacion de un fichero
+  struct generic_fd virtual_fd; // descriptor de fichero generico
+  
+  debug_info("[bypass] >> Before add_xpn_file_to_fdstable....\n");
+  debug_info("[bypass]    1) fd  => %d\n", fd);
+
+  int ret = fd; // valor de retorno
+
+  // check arguments
+  if (fd < 0) {
+    debug_info("[bypass]\t add_xpn_file_to_fdstable -> %d\n", ret);
+    debug_info("[bypass] << After add_xpn_file_to_fdstable....\n");
+
+    return ret;
+  } 
+
+  // fstat(fd...
+  xpn_fstat(fd, &st); // obtiene la informacion del fichero correspondiente al descriptor de fichero fd
+
+  // setup virtual_fd
+  virtual_fd.type    = FD_XPN;
+  virtual_fd.real_fd = fd;
+  virtual_fd.is_file = (S_ISDIR(st.st_mode)) ? 0 : 1;
+
+  // insert into fdstable
+  ret = fdstable_put ( virtual_fd );
+
+  debug_info("[bypass]\t add_xpn_file_to_fdstable -> %d\n", ret);
+  debug_info("[bypass] << After add_xpn_file_to_fdstable....\n");
+
+  return ret;
+}
