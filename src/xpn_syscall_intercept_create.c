@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <sys/uio.h>
+#include <sys/stat.h>
 
 char *xpn_adaptor_partition_prefix = "/tmp/expand/"; // Original --> xpn:// 
 int   xpn_prefix_change_verified = 0;
