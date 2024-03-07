@@ -5,6 +5,8 @@
 #include <string.h>
 #include <sys/uio.h>
 
+char *xpn_adaptor_partition_prefix = "/tmp/expand/"; // Original --> xpn:// 
+int   xpn_prefix_change_verified = 0;
 
 static int
 hook(long syscall_number,
