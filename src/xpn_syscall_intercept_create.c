@@ -10,6 +10,7 @@
 #define MAX_FDS   10000
 #define FD_FREE 0
 #define MAX_FDS   10000
+ #define MAX_DIRS  10000
 
 #ifdef DEBUG
     #define debug_error(...)    debug_msg_printf(1, __FILE__, __LINE__, stderr, __VA_ARGS__)
