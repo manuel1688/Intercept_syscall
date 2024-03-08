@@ -5,6 +5,11 @@
 #include <string.h>
 #include <sys/uio.h>
 #include <sys/stat.h>
+#include <dirent.h>
+
+#define MAX_FDS   10000
+#define FD_FREE 0
+#define MAX_FDS   10000
 
 #ifdef DEBUG
     #define debug_error(...)    debug_msg_printf(1, __FILE__, __LINE__, stderr, __VA_ARGS__)
@@ -21,6 +26,11 @@ int   xpn_prefix_change_verified = 0;
 
 static int xpn_adaptor_initCalled = 0;
 static int xpn_adaptor_initCalled_getenv = 0; 
+
+DIR ** fdsdirtable = NULL;
+long   fdstable_size = 0L;
+long   fdsdirtable_size = 0L;
+struct generic_fd * fdstable = NULL;
 
 struct generic_fd
   {
