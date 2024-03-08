@@ -31,6 +31,97 @@ struct generic_fd
 
 #define FD_XPN  2
 
+void fdstable_realloc ( void ) 
+{
+  long old_size = fdstable_size;
+  struct generic_fd * fdstable_aux = fdstable;
+
+  debug_info("[bypass] >> Before fdstable_realloc....\n");
+
+  if ( NULL == fdstable )
+  {
+    fdstable_size = (long) MAX_FDS;
+    fdstable = (struct generic_fd *) malloc(fdstable_size * sizeof(struct generic_fd));
+  }
+  else
+  {
+    fdstable_size = fdstable_size * 2;
+    fdstable = (struct generic_fd *) realloc((struct generic_fd *)fdstable, fdstable_size * sizeof(struct generic_fd));
+  }
+
+  if ( NULL == fdstable )
+  {
+    debug_error( "[bypass:%s:%d] Error: out of memory\n", __FILE__, __LINE__);
+    if (fdstable_aux != NULL) {
+      free(fdstable_aux);
+    }
+
+    exit(-1);
+  }
+  
+  for (int i = old_size; i < fdstable_size; ++i)
+  {
+    fdstable[i].type = FD_FREE;
+    fdstable[i].real_fd = -1;
+    fdstable[i].is_file = -1;
+  }
+
+  debug_info("[bypass] << After fdstable_realloc....\n");
+}
+
+void fdsdirtable_realloc ( void )
+{
+  long          old_size = fdsdirtable_size;
+  DIR ** fdsdirtable_aux = fdsdirtable;
+  
+  debug_info("[bypass] >> Before fdsdirtable_realloc....\n");
+  
+  if ( NULL == fdsdirtable )
+  {
+    fdsdirtable_size = (long) MAX_DIRS;
+    fdsdirtable = (DIR **) malloc(MAX_DIRS * sizeof(DIR *));
+  }
+  else
+  {
+    fdsdirtable_size = fdsdirtable_size * 2;
+    fdsdirtable = (DIR **) realloc((DIR **)fdsdirtable, fdsdirtable_size * sizeof(DIR *));
+  }
+
+  if ( NULL == fdsdirtable )
+  {
+    debug_error( "[bypass:%s:%d] Error: out of memory\n", __FILE__, __LINE__);
+    if (NULL != fdsdirtable_aux) {
+      free(fdsdirtable_aux);
+    }
+
+    exit(-1);
+  }
+  
+  for (int i = old_size; i < fdsdirtable_size; ++i) {
+    fdsdirtable[i] = NULL;
+  }
+
+  debug_info("[bypass] << After fdsdirtable_realloc....\n");
+}
+
+void fdsdirtable_init ( void )
+{
+  debug_info("[bypass] >> Before fdsdirtable_init....\n");
+
+  fdsdirtable_realloc();
+
+  debug_info("[bypass] << After fdsdirtable_init....\n");
+}
+
+void fdstable_init ( void ) // esta funcion se encarga de inicializar la tabla de descriptores de ficheros
+{
+  debug_info("[bypass] >> Before fdstable_init....\n");
+
+  fdstable_realloc();
+
+  debug_info("[bypass] << After fdstable_init....\n");
+}
+
 int xpn_adaptor_keepInit ( void )
 {
   int    ret;
