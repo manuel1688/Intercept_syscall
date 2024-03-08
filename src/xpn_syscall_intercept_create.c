@@ -6,7 +6,6 @@
 #include <sys/uio.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include "xpn.h"
 
 #define MAX_FDS   10000
 #define FD_FREE 0
