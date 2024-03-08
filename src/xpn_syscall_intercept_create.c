@@ -155,7 +155,7 @@ int xpn_adaptor_keepInit ( void )
   return ret;
 }
 
-const char * skip_xpn_prefix ( const char * path ) // esta funcion se encarga de saltar el prefijo de XPN con el fin de obtener el path real para el sistema de archivos que se esta utilizando
+const char* skip_xpn_prefix (const char * path) 
 {
   return (const char *)(path + strlen(xpn_adaptor_partition_prefix));
 }
