@@ -4,8 +4,8 @@
 
  MAKE         = make -s
  CC           = /home/lab/bin/mpich/bin/mpicc
- MYHEADER     = -I../../include/ -I../../include/base
- MYLIBPATH    = -L../../src/base
+ MYHEADER     = -I../../../include/ -I../../../include/base
+ MYLIBPATH    = -L../../../src/base
  LIBRARIES    = -lpthread -ldl
  MYFLAGS      = -O2 -Wall -D_REENTRANT -DPOSIX_THREADS -DHAVE_CONFIG_H
 
