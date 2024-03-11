@@ -5,7 +5,7 @@
 #include <string.h>
 #include <sys/uio.h> 
 
-#include "xpn_bypass.h"
+#include "xpn_syscall_intercept_create.h"
 
 static int xpn_adaptor_initCalled = 0;
 static int xpn_adaptor_initCalled_getenv = 0; 
