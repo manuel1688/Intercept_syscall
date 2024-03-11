@@ -17,11 +17,11 @@
 all: prueba_create 
 
 prueba_create: prueba_create.o
-        $(CC) -o prueba_create prueba_create.o $(MYLIBPATH) $(LIBRARIES)
+	$(CC) -o prueba_create prueba_create.o $(MYLIBPATH) $(LIBRARIES)
 
 %.o: %.c
-        $(CC) $(CFLAGS) $(MYFLAGS) $(MYHEADER) -c $< -o $@
+	$(CC) $(CFLAGS) $(MYFLAGS) $(MYHEADER) -c $< -o $@
 
 clean:
-        rm -f ./*.o
-        rm -f ./prueba_create 
+	rm -f ./*.o
+	rm -f ./prueba_create 
