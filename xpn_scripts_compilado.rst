@@ -28,7 +28,7 @@
     LD_PRELOAD=xpn_syscall_intercept.so:$LD_PRELOAD  XPN_CONF=./xpn.conf  ./prueba_creat /tmp/expand/P1/demo.txt  8
 
     ## comando para probar intercept xpn lib creat
-    LD_PRELOAD=xpn_syscall_intercept_create.so:$LD_PRELOAD XPN_CONF=./xpn.conf ./prueba_creat /tmp/expand/P1/demo.txt 8
+    LD_PRELOAD=xpn_syscall_intercept_create.so:$LD_PRELOAD XPN_CONF=./xpn.conf ./prueba_create /tmp/expand/P1/demo.txt 8
 
     LD_PRELOAD=xpn_syscall_intercept_create.so XPN_CONF=./xpn.conf ./prueba_creat /tmp/expand/P1/demo.txt 8
     
